@@ -4,8 +4,9 @@ Question: {question}
 {multiple_choices}
 Answer in JSON format:
 ```json
-{{"answer": "Your selected option here"}}
+{{"answer": "Alphabet only"}}
 ```
+Note: Alphabet should be one option in (A,B,C,D,E,F,G)
 """
 
 
@@ -30,10 +31,13 @@ Answer in JSON format:
 """
 
 CORRECT_FORMAT_PROMPT = """
-You are given the available choices and the chosen choice by the LLM, but it is not in the desired format. The desired format should be only the JSON with an alphabetic answer. Please convert the given answer to the correct format.
+You are given the question available choices and the chosen choice by the LLM, but it is not in the desired format. 
+The desired format should be only the JSON with an alphabetic answer. Please reanswer the question again and convert the given answer to the correct format.
+You can consider llm output as reference, should think step by step
 
 Example:
 Given:
+Question: This is a sample question
 Choices: ["Option A", "Option B", "Option C", "Option D"]
 LLM's answer: "The correct answer is Option B"
 
@@ -44,7 +48,9 @@ Desired output:
 
 Your task is to extract the correct letter (A, B, C, or D) from the LLM's answer and format it as shown in the example above.
 
+Question: {question}
 Choices: {choices}
 LLM's answer: {answer}
 Desired output:
+NOTE: Only one option is selected
 """
