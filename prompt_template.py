@@ -19,8 +19,10 @@ Question: If a sorted array of integers is guaranteed to not contain duplicate v
 (C) Insertion Sort
 (D) Binary Search
 
-Answer: {{"answer": "D"}}
-
+Answer in JSON format:
+```json
+{{"answer": "D"}}
+``` 
 Question: {question}
 {multiple_choices}
 
