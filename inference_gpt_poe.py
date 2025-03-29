@@ -26,14 +26,10 @@ def load_and_preprocess_data(file_path):
 
 def get_option_probabilities(client, question, options):
     """Query the LLM to get probabilities for each option."""
-    from datetime import datetime
-
     instruction = f"""
-    Date (ignore the date): {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     You are given a multiple-choice question. 
-    Identify the option that is least likely to be correct.  
-    Return a JSON object with the final probabilities for each option.
-    Outputformat should be in ```json\n{{alphabet: probability}}``` brackets
+    For each option, assign a probability of correctness.
+    Return in format: ```json\n{{alphabet: probability}}``` brackets
     alphabet should be one of [A, B, C, D ,E, F]. 
     Note: output final probability only
     """
