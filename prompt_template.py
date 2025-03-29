@@ -1,32 +1,37 @@
+SYSTEM_MESSAGE = """You are a coding assistant that help to answer multiple choices of software development and Extract final answer.
+The answer selected from the multiple choice options. Should be one alphabet option (A,B,C,D,E,F).
+Do not try to correct, adjust or change the question of choices, just choose option base on provided question."""
+
+
 ZERO_SHOT_TEMPLATE = """
 The following are multiple choice questions (with answers) about software development.
+Note: Alphabet should be one option in (A,B,C,D,E,F,G)
 Question: {question}
 {multiple_choices}
-Answer in JSON format:
+Answer in JSON format (in ```json``` brackets):
 ```json
-{{"answer": "Alphabet only"}}
-```
-Note: Alphabet should be one option in (A,B,C,D,E,F,G)
+{{"answer": "Your selected option here"}}
+``` 
 """
 
 
 FEW_SHOT_TEMPLATE = """
 The following are multiple choice questions (with answers) about software development.
-
-Question: If a sorted array of integers is guaranteed to not contain duplicate values, in order to search for a specific value which of the following algorithms is the most efficient for this task?
+## Here is an example, do not answer this sample question again
+Sample Question: If a sorted array of integers is guaranteed to not contain duplicate values, in order to search for a specific value which of the following algorithms is the most efficient for this task?
 (A) Bubble Sort
 (B) Linear Search
 (C) Insertion Sort
 (D) Binary Search
 
-Answer in JSON format:
+Sample Answer in JSON format:
 ```json
 {{"answer": "D"}}
 ``` 
 Question: {question}
 {multiple_choices}
 
-Answer in JSON format:
+Answer in JSON format (in ```json``` brackets):
 ```json
 {{"answer": "Your selected option here"}}
 ``` 
