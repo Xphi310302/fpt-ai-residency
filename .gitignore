@@ -94,5 +94,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# Output files
-/output/
+*/test.ipynb
+/lora_model_3ksample
+models/qwen-14b-4k.zip

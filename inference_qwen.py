@@ -11,7 +11,7 @@ from prompt_template import (
 )
 
 # Replace with your actual localtunnel URL
-LOCALTUNNEL_URL = "https://yummy-buses-behave.loca.lt"
+LOCALTUNNEL_URL = "https://chilly-banks-count.loca.lt"
 
 load_dotenv()
 
@@ -119,7 +119,54 @@ def correct_format(question, choices, llm_output):
 def process_answers(df, prompt_template=FEW_SHOT_TEMPLATE):
     choices_answer = []
     wrong_format_answer = {}
-    for i, row in df.iterrows():
+
+    # Check if temporary file exists and load previously processed answers
+    temp_file_path = "output/temp_choices_answer.csv"
+    start_index = 0
+    os.makedirs("output", exist_ok=True)
+
+    if os.path.exists(temp_file_path):
+        print(f"Found existing file {temp_file_path}, loading previous answers...")
+        temp_df = pd.read_csv(temp_file_path, header=None, names=["index", "answer"])
+
+        # Convert index to integer for proper comparison
+        temp_df["index"] = temp_df["index"].astype(int)
+
+        # Get the last processed index
+        if not temp_df.empty:
+            last_processed_index = temp_df["index"].max()
+            start_index = last_processed_index + 1
+
+            # Load previous answers
+            for _, row in temp_df.iterrows():
+                idx = row["index"]
+                answer = row["answer"]
+
+                # Extend choices_answer list if needed
+                while len(choices_answer) <= idx:
+                    choices_answer.append(None)
+
+                choices_answer[idx] = answer
+
+                # Check if answer is in wrong format
+                if answer not in i2choices.values():
+                    wrong_format_answer[idx] = answer
+
+            print(
+                f"Loaded {len(temp_df)} previous answers. Continuing from index {start_index}."
+            )
+        else:
+            # File exists but is empty
+            print("Temporary file exists but is empty. Starting from the beginning.")
+            # Clear the file to start fresh
+            open(temp_file_path, "w").close()
+    else:
+        # Create a new file
+        open(temp_file_path, "w").close()
+        print("Starting new inference process.")
+
+    # Continue processing from where we left off
+    for i, row in df.iloc[start_index:].iterrows():
         print(i)
         input_text = prompt_template.format(
             question=row["question"], multiple_choices=row["choices"]
@@ -131,14 +178,20 @@ def process_answers(df, prompt_template=FEW_SHOT_TEMPLATE):
             answer = "A"  # Default to A if no answer could be extracted
             print(f"No answer extracted at index {i}, defaulting to 'A'")
 
-        choices_answer.append(answer)
+        # Extend choices_answer list if needed
+        while len(choices_answer) <= i:
+            choices_answer.append(None)
+
+        choices_answer[i] = answer
+
         # Write answers to temporary CSV file
-        with open("output/temp_choices_answer.csv", "a") as f:
+        with open(temp_file_path, "a") as f:
             f.write(f"{i},{answer}\n")
 
         if answer not in i2choices.values():
             print(f"Wrong format answer at index {i}")
             wrong_format_answer[i] = answer
+
     return choices_answer, wrong_format_answer
 
 
@@ -182,8 +235,8 @@ def main(template):
     # Create output directory if it doesn't exist
     os.makedirs("output", exist_ok=True)
 
-    submission.to_csv("output/submission.csv", index=False)
-    print("Submission saved to output/submission.csv")
+    submission.to_csv("output/submission_qwen_zero.csv", index=False)
+    print("Submission saved to output/submission_qwen.csv")
 
 
 if __name__ == "__main__":
