@@ -1,5 +1,7 @@
 # FPT AI Residency Project
-
+# Ranking Results
+- Rank 21 in Public Set and Rank 22 in Private Set. The results can be found in this [link](https://www.kaggle.com/competitions/fpt-ai-residency-batch-6-entry-test/leaderboard?tab=public) 
+- Note: You can find me as "Phi Nguyễn Xuân" in the team name
 ## Overview
 This repository contains code for a multiple-choice question (CodeMMLU benchmark) answering system for software development topics. The project includes inference scripts for various language models (GPT, Qwen), finetuning notebooks, and data preprocessing utilities.
 
